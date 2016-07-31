@@ -9,19 +9,42 @@
 import Foundation
 import MapKit
 
-class PinnedLocation: NSObject, MKAnnotation {
-    
+class PinnedLocation: NSObject, Pinnable {
     var title: String?
     var subtitle: String?
-    var note: String?
     var coordinate: CLLocationCoordinate2D
+    var placemark: MKPlacemark?
+    var pinColor: UIColor = UIColor.green()
     
-    init(title: String? = nil, subtitle: String? = nil, note: String? = nil, coordinate: CLLocationCoordinate2D) {
+    init(title: String? = nil, subtitle: String? = nil, coordinate: CLLocationCoordinate2D) {
         self.title = title
-        self.note = note
         self.coordinate = coordinate
-        
         super.init()
     }
-    
 }
+
+class SearchedLocation: NSObject, Pinnable {
+    var title: String?
+    var subtitle: String?
+    var coordinate: CLLocationCoordinate2D
+    var placemark: MKPlacemark?
+    var pinColor: UIColor = UIColor.red()
+
+    
+    init(title: String? = nil, subtitle: String? = nil, coordinate: CLLocationCoordinate2D) {
+        self.title = title
+        self.coordinate = coordinate
+        super.init()
+    }
+}
+
+protocol Pinnable: MKAnnotation {
+    var title: String? { get set }
+    var subtitle: String? { get set }
+    var coordinate: CLLocationCoordinate2D { get set }
+    var placemark: MKPlacemark? { get set }
+    var pinColor: UIColor { get }
+}
+
+
+

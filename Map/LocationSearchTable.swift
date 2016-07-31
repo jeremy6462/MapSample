@@ -19,22 +19,43 @@ class LocationSearchTable : UITableViewController {
     
     var tableViewCompactScreenFrame: CGRect?
     
+    enum State: Int {
+        case compact
+        case fullScreen
+    }
+    
+    var state: State = .fullScreen
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        state = .fullScreen
         
         let shrunkenHeight = self.view.frame.size.height / 3
         tableViewCompactScreenFrame = CGRect(x:0.0, y: self.view.bounds.size.height-shrunkenHeight,
                            width: self.view.frame.size.width,
-                           height: shrunkenHeight) // move to bottom of screen
+                           height: shrunkenHeight)
     }
     
-    func closeGap() {
-        self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    func shrink() {
+        if self.tableViewCompactScreenFrame == nil {
+            let shrunkenHeight = self.view.frame.size.height / 3
+            self.tableViewCompactScreenFrame = CGRect(x:0.0, y: self.view.bounds.size.height-shrunkenHeight, width: self.view.frame.size.width, height: shrunkenHeight)
+        }
+        if state == .fullScreen {
+            self.view.frame = self.tableViewCompactScreenFrame!
+//            self.tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            state = .compact
+        }
     }
     
-    func openGap() {
-        self.tableView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 0, right: 0)
-        self.automaticallyAdjustsScrollViewInsets = true
+    func grow() {
+        if state == .compact {
+            self.view.frame = CGRect(x:0.0, y: self.view.frame.size.height * 3, width: self.view.frame.size.width, height: self.view.frame.size.height * 3)
+//            self.tableView.contentInset = UIEdgeInsets(top: 15, left: 0, bottom: 0, right: 0)
+//            self.automaticallyAdjustsScrollViewInsets = true
+            state = .fullScreen
+        }
     }
     
 }
@@ -47,6 +68,9 @@ extension LocationSearchTable : UISearchResultsUpdating {
         request.naturalLanguageQuery = searchBarText
         request.region = mapView.region
         let search = MKLocalSearch(request: request)
+        
+        // FIXME - bad search results (eg. Panera)
+        
         search.start { response, _ in
             guard let response = response else {
                 return
@@ -76,8 +100,8 @@ extension LocationSearchTable {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = matchingItems[indexPath.row].placemark
-        handleMapSearchDelegate?.dropPinZoomIn(placemark: selectedItem)
-        dismiss(animated: true, completion: nil) // TODO - shrink to bottom, not dismiss
+        handleMapSearchDelegate?.dropPinnedLocationZoomIn(placemark: selectedItem)
+        dismiss(animated: true, completion: nil)
     }
 
 }

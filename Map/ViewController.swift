@@ -16,9 +16,15 @@ class ViewController: UIViewController  {
     var locationManager = CLLocationManager()
     var currentLocation: CLLocation?
     
-    var resultSearchController:UISearchController? = nil
-    var selectedPin:MKPlacemark? = nil
+    var resultSearchController: UISearchController? = nil
+    var selectedPin: Pinnable? = nil
+    
+    var locations: [PinnedLocation] = []
+    var searchedPins: [SearchedLocation] = []
         
+    @IBOutlet weak var currentLocationHoverBar: ISHHoverBar!
+    @IBOutlet weak var savePinsHoverBar: ISHHoverBar!
+    
     @IBOutlet weak var map: MKMapView!
 
     
@@ -58,6 +64,19 @@ class ViewController: UIViewController  {
         locationSearchTable.mapView = map
         
         locationSearchTable.handleMapSearchDelegate = self
+        
+        // current location hover bar
+        let mapBarButton = MKUserTrackingBarButtonItem(mapView: map)
+        self.currentLocationHoverBar.items = [mapBarButton]
+        
+        // save pins hover bar
+        let savePinsButton = UIButton(type: .contactAdd)
+        savePinsButton.tintColor = UIColor.green()
+        savePinsButton.frame = savePinsHoverBar.frame
+        savePinsButton.addTarget(self, action: #selector(savePins), for: .touchUpInside)
+        let savePinsBarButton = UIBarButtonItem(customView: savePinsButton)
+        savePinsHoverBar.items = [savePinsBarButton]
+        savePinsHoverBar.isHidden = true
     }
     
     // TODO - add button to go to open maps with location
@@ -65,29 +84,42 @@ class ViewController: UIViewController  {
         if gestureRecognizer.state == .began {
             let touchPoint = gestureRecognizer.location(in: map)
             let newCoordinates = map.convert(touchPoint, toCoordinateFrom: map)
-            let annotation = PinnedLocation(title: "Your Location", coordinate: newCoordinates)
             
             CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: newCoordinates.latitude, longitude: newCoordinates.longitude), completionHandler: {(placemarks, error) -> Void in
                 if error != nil {
-                    print("Reverse geocoder failed with error \(error!.localizedDescription)")
+                    if error?.code == 2 {
+                        print("not good enough internet connection to get the address of you pin")
+                    }
+                    else {
+                        print("Reverse geocoder failed with error \(error!.localizedDescription)")
+                    }
                     return
                 }
                 
                 if let placemarks = placemarks where placemarks.count > 0 {
                     let placemark = placemarks[0]
                     
-                    if let name = placemark.name {
-                        annotation.title = name
-                    }
+                    let annotation = PinnedLocation(title: placemark.name, coordinate: newCoordinates)
+                    annotation.placemark = MKPlacemark(placemark: placemark)
                     annotation.subtitle = AddressParser.parse(placemark: MKPlacemark(placemark: placemark))
-                    
+                    self.map.addAnnotation(annotation)
+                    self.locations.append(annotation)
                 }
                 else {
                     print("Problem with the data received from geocoder")
                 }
-                self.map.addAnnotation(annotation)
             })
         }
+    }
+    
+    func savePins() {
+        for searchedPin in searchedPins {
+            let pin = PinnedLocation(title: searchedPin.title!, subtitle: searchedPin.subtitle!, coordinate: searchedPin.coordinate)
+            map.removeAnnotation(searchedPin)
+            map.addAnnotation(pin)
+            self.locations.append(pin)
+        }
+        self.savePinsHoverBar.isHidden = true
     }
     
 }
@@ -95,20 +127,48 @@ class ViewController: UIViewController  {
 
 // MARK: - Handle what happens when a search result is tapped
 protocol HandleMapSearch {
-    func dropPinZoomIn(placemark:MKPlacemark)
+    func dropPinnedLocationZoomIn(placemark:MKPlacemark)
+    func dropSearchedLocation(placemark:MKPlacemark)
 }
 
 extension ViewController: HandleMapSearch {
-    func dropPinZoomIn(placemark:MKPlacemark){
-        selectedPin = placemark
-        map.removeAnnotations(map.annotations)
+    func dropPinnedLocationZoomIn(placemark:MKPlacemark) {
         let annotation = PinnedLocation(title: placemark.name, coordinate: placemark.coordinate)
+        annotation.placemark = placemark
+        annotation.subtitle = AddressParser.parse(placemark: placemark)
+        
+        map.addAnnotation(annotation)
+        locations.append(annotation)
+        centerMapOnLocation(location: placemark.location!)
+    }
+    
+    func dropSearchedLocation(placemark:MKPlacemark) {
+        let annotation = SearchedLocation(title: placemark.name, coordinate: placemark.coordinate)
+        annotation.placemark = placemark
         if let city = placemark.locality,
             let state = placemark.administrativeArea {
             annotation.subtitle = "\(city) \(state)"
         }
         map.addAnnotation(annotation)
-        centerMapOnLocation(location: placemark.location!)
+        self.searchedPins.append(annotation)
+
+    }
+    
+    func fitMapRegionForSearchedPins() {
+        var upper = searchedPins[0].coordinate
+        var lower = searchedPins[0].coordinate
+        for pin in searchedPins {
+            if pin.coordinate.latitude > upper.latitude { upper.latitude = pin.coordinate.latitude }
+            if pin.coordinate.latitude < lower.latitude { lower.latitude = pin.coordinate.latitude }
+            if pin.coordinate.longitude > upper.longitude { upper.longitude = pin.coordinate.longitude }
+            if pin.coordinate.longitude < lower.longitude { lower.longitude = pin.coordinate.longitude }
+        }
+        
+        let locationSpan = MKCoordinateSpan(latitudeDelta: upper.latitude - lower.latitude, longitudeDelta: upper.longitude - lower.longitude)
+        let locationCenter = CLLocationCoordinate2D(latitude: (upper.latitude + lower.latitude) / 2, longitude: (upper.longitude + lower.longitude) / 2)
+        
+        let region = MKCoordinateRegionMake(locationCenter, locationSpan)
+        map.region = region
     }
 }
 
@@ -116,19 +176,18 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     
-        // store imporant aspects of the table before it's dismissed
-        guard let locationSearchTable = resultSearchController?.searchResultsUpdater as? LocationSearchTable else { print("uh oh"); return }
+        guard let locationSearchTable = resultSearchController?.searchResultsUpdater as? LocationSearchTable else { print("location table not present after search button pressed"); return }
         
-        if locationSearchTable.tableViewCompactScreenFrame == nil {
-            let shrunkenHeight = locationSearchTable.view.frame.size.height / 3
-            locationSearchTable.tableViewCompactScreenFrame = CGRect(x:0.0, y: self.view.bounds.size.height-shrunkenHeight,
-                                                 width: self.view.frame.size.width,
-                                                 height: shrunkenHeight) // move to bottom of screen
+        locationSearchTable.shrink()
+        
+        for searchedLocation in locationSearchTable.matchingItems {
+            let placemark = searchedLocation.placemark
+            dropSearchedLocation(placemark: placemark)
         }
-        locationSearchTable.view.frame = locationSearchTable.tableViewCompactScreenFrame!
         
-        // for the table view
-        locationSearchTable.closeGap()
+        self.savePinsHoverBar.isHidden = false
+        
+        fitMapRegionForSearchedPins()
         
         // FIXME - table view is only moved down (not shrunkin)
         // FIXME - content insets don't move back to normal on taping search bar again (insets?)
@@ -136,11 +195,15 @@ extension ViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         
-        guard let locationSearchTable = resultSearchController?.searchResultsUpdater as? LocationSearchTable else { print("uh oh"); return }
+        guard let locationSearchTable = resultSearchController?.searchResultsUpdater as? LocationSearchTable else { print("location table not present after search text field tapped"); return }
         
         locationSearchTable.view.frame = self.view.frame // this view controllers frame
-        locationSearchTable.openGap()
-        
+        locationSearchTable.grow();
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.map.removeAnnotations(searchedPins)
+        self.savePinsHoverBar.isHidden = true
         
     }
     

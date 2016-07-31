@@ -15,6 +15,7 @@
 		733F857F1D3737E4000245B4 /* LocationSearchTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F857E1D3737E4000245B4 /* LocationSearchTable.swift */; };
 		733F85811D3833A2000245B4 /* AddressParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 733F85801D3833A2000245B4 /* AddressParser.swift */; };
 		736C2C631D39E18A006A7C32 /* PinnedLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736C2C621D39E18A006A7C32 /* PinnedLocation.swift */; };
+		73D0E4BB1D4AF97800FBFE73 /* ISHHoverBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 73D0E4BA1D4AF97800FBFE73 /* ISHHoverBar.m */; };
 		73FB66E11D2F44CD00C0655C /* VCMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FB66E01D2F44CD00C0655C /* VCMapView.swift */; };
 		73FB670F1D32F2FD00C0655C /* VCLocationManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FB670E1D32F2FD00C0655C /* VCLocationManagement.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,8 @@
 		733F85801D3833A2000245B4 /* AddressParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressParser.swift; sourceTree = "<group>"; };
 		736C2C611D39E0AF006A7C32 /* Map-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Map-Bridging-Header.h"; sourceTree = "<group>"; };
 		736C2C621D39E18A006A7C32 /* PinnedLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinnedLocation.swift; sourceTree = "<group>"; };
+		73D0E4B91D4AF97800FBFE73 /* ISHHoverBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHHoverBar.h; sourceTree = "<group>"; };
+		73D0E4BA1D4AF97800FBFE73 /* ISHHoverBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ISHHoverBar.m; sourceTree = "<group>"; };
 		73FB66E01D2F44CD00C0655C /* VCMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VCMapView.swift; sourceTree = "<group>"; };
 		73FB670E1D32F2FD00C0655C /* VCLocationManagement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VCLocationManagement.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,13 +86,15 @@
 				73FB66E01D2F44CD00C0655C /* VCMapView.swift */,
 				73FB670E1D32F2FD00C0655C /* VCLocationManagement.swift */,
 				733F857E1D3737E4000245B4 /* LocationSearchTable.swift */,
+				736C2C621D39E18A006A7C32 /* PinnedLocation.swift */,
 				733F85801D3833A2000245B4 /* AddressParser.swift */,
 				73022FF01D2F307500BB53CE /* Main.storyboard */,
 				73022FF31D2F307500BB53CE /* Assets.xcassets */,
 				73022FF51D2F307500BB53CE /* LaunchScreen.storyboard */,
 				73022FF81D2F307500BB53CE /* Info.plist */,
 				736C2C611D39E0AF006A7C32 /* Map-Bridging-Header.h */,
-				736C2C621D39E18A006A7C32 /* PinnedLocation.swift */,
+				73D0E4B91D4AF97800FBFE73 /* ISHHoverBar.h */,
+				73D0E4BA1D4AF97800FBFE73 /* ISHHoverBar.m */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -175,6 +180,7 @@
 				736C2C631D39E18A006A7C32 /* PinnedLocation.swift in Sources */,
 				73FB670F1D32F2FD00C0655C /* VCLocationManagement.swift in Sources */,
 				733F857F1D3737E4000245B4 /* LocationSearchTable.swift in Sources */,
+				73D0E4BB1D4AF97800FBFE73 /* ISHHoverBar.m in Sources */,
 				733F85811D3833A2000245B4 /* AddressParser.swift in Sources */,
 				73022FED1D2F307500BB53CE /* AppDelegate.swift in Sources */,
 			);
