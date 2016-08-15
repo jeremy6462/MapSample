@@ -19,9 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2gB-1y-Did">
-                                <frame key="frameInset" minY="667" width="375"/>
-                            </mapView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2gB-1y-Did"/>
                             <view contentMode="scaleToFill" placeholderIntrinsicWidth="44" placeholderIntrinsicHeight="88" translatesAutoresizingMaskIntoConstraints="NO" id="ejz-oA-Jnr" customClass="ISHHoverBar">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -31,14 +29,14 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="2gB-1y-Did" secondAttribute="trailing" id="5oH-mx-R3L"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TKE-0C-CMf" secondAttribute="bottom" constant="543" id="A7o-E6-DuD"/>
-                            <constraint firstItem="2gB-1y-Did" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="EIc-iK-Qc7"/>
                             <constraint firstItem="ejz-oA-Jnr" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="N0N-SC-hk6"/>
-                            <constraint firstItem="2gB-1y-Did" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Sc6-MB-WKo"/>
-                            <constraint firstItem="2gB-1y-Did" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="UIy-np-pRX"/>
+                            <constraint firstItem="2gB-1y-Did" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="T35-KR-3cg"/>
+                            <constraint firstItem="2gB-1y-Did" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="TZi-6h-N17"/>
+                            <constraint firstAttribute="trailing" secondItem="2gB-1y-Did" secondAttribute="trailing" id="bek-HV-ZJd"/>
                             <constraint firstAttribute="bottom" secondItem="ejz-oA-Jnr" secondAttribute="bottom" constant="20" symbolic="YES" id="fP7-aj-u8O"/>
                             <constraint firstItem="TKE-0C-CMf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="16" id="i5h-x0-3Pu"/>
+                            <constraint firstItem="2gB-1y-Did" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tcR-kP-fmv"/>
                             <constraint firstItem="TKE-0C-CMf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="zpI-4A-ani"/>
                         </constraints>
                     </view>

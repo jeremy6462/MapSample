@@ -11,7 +11,10 @@ import MapKit
 
 extension ViewController: MKMapViewDelegate {
     
-    // TODO - different MKAnnotations for pinned location and searched location
+    enum AnnotationTag: Int {
+        case directions = 1
+        case locationListModifier = 2
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if let annotation = annotation as? Pinnable { // FIXME
@@ -26,7 +29,7 @@ extension ViewController: MKMapViewDelegate {
             let smallSquare = CGSize(width: 50, height: 50)
             let directions = UIButton(frame: CGRect(origin: CGPoint(), size: smallSquare))
             directions.backgroundColor = UIColor.blue()
-            directions.addTarget(self, action: #selector(getDirections), for: .touchUpInside)
+            directions.tag = AnnotationTag.directions.rawValue
             view.leftCalloutAccessoryView = directions
             
             // add/remove from location list
@@ -36,9 +39,11 @@ extension ViewController: MKMapViewDelegate {
             } else { // it's a searched pin
                 imageName = "addLocation"
             }
-            let button = UIButton(type: .detailDisclosure)
-            button.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
-            view.rightCalloutAccessoryView = button
+            let locationListModifier = UIButton(type: .detailDisclosure)
+            locationListModifier.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            locationListModifier.tag = AnnotationTag.locationListModifier.rawValue
+            view.rightCalloutAccessoryView = locationListModifier
+            
             view.canShowCallout = true
             
             return view
@@ -51,6 +56,17 @@ extension ViewController: MKMapViewDelegate {
         selectedPin = view.annotation as? Pinnable
     }
     
+    // MARK - Accessory Button
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if control == view.leftCalloutAccessoryView {
+            getDirections()
+        }
+        else if control == view.rightCalloutAccessoryView {
+            locationListModifier()
+        }
+    }
+    
     func getDirections() {
         if let selectedPin = selectedPin, let placemark = selectedPin.placemark {
             let mapItem = MKMapItem(placemark: placemark)
@@ -59,9 +75,7 @@ extension ViewController: MKMapViewDelegate {
         }
     }
     
-    // MARK - Accessory Button
-    
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    func locationListModifier() {
         if let selectedPin = selectedPin {
             if selectedPin is PinnedLocation {
                 removeLocation()
@@ -74,7 +88,7 @@ extension ViewController: MKMapViewDelegate {
     func addLocation() {
         if let selectedPin = selectedPin {
             let pin = PinnedLocation(title: selectedPin.title!, subtitle: selectedPin.subtitle!, coordinate: selectedPin.coordinate)
-            removeLocation()
+            removeLocation() // TODO - we should remove this from list of searched locations and the map
             locations.append(pin)
             self.map.addAnnotation(pin)
         }
@@ -88,5 +102,4 @@ extension ViewController: MKMapViewDelegate {
         }
     }
 
-    
 }
