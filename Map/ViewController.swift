@@ -51,7 +51,6 @@ class ViewController: UIViewController  {
         resultSearchController?.searchResultsUpdater = locationSearchTable
         
         locationSearchTable.mapView = map
-        
         locationSearchTable.handleMapSearchDelegate = self
         
         let searchBar = resultSearchController!.searchBar
@@ -120,6 +119,7 @@ class ViewController: UIViewController  {
             map.addAnnotation(pin)
             self.locations.append(pin)
         }
+        searchedPins.removeAll()
         self.savePinsHoverBar.isHidden = true
     }
     
@@ -134,6 +134,7 @@ protocol HandleMapSearch {
 extension ViewController: HandleMapSearch {
     func dropPin(for placemark:MKPlacemark, saveToLocations save: Bool = true) {
         
+        // if the pin is not present, add it
         var annotation: Pinnable
         if save {
             annotation = PinnedLocation(title: placemark.name, coordinate: placemark.coordinate)
@@ -203,7 +204,6 @@ extension ViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         clearMapOfSearches()
     }
-    
 }
 
 

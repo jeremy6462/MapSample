@@ -17,7 +17,7 @@ extension ViewController: MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if let annotation = annotation as? Pinnable { // FIXME
+        if let annotation = annotation as? Pinnable {
             let identifier = "pin"
             var view: MKPinAnnotationView
             view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
@@ -26,10 +26,9 @@ extension ViewController: MKMapViewDelegate {
             view.pinTintColor = annotation.pinColor
             
             // directions button
-            let smallSquare = CGSize(width: 50, height: 50)
-            let directions = UIButton(frame: CGRect(origin: CGPoint(), size: smallSquare))
-            directions.backgroundColor = UIColor.blue()
-            directions.tag = AnnotationTag.directions.rawValue
+            let directionsSize = CGSize(width: 50, height: 50)
+            let directions = UIButton(frame: CGRect(origin: CGPoint(), size: directionsSize))
+            directions.backgroundColor = UIColor.blue() // FIXME - directions icon
             view.leftCalloutAccessoryView = directions
             
             // add/remove from location list
@@ -39,9 +38,9 @@ extension ViewController: MKMapViewDelegate {
             } else { // it's a searched pin
                 imageName = "addLocation"
             }
-            let locationListModifier = UIButton(type: .detailDisclosure)
+            let locationsListModifierSize = CGSize(width: 30, height: 30)
+            let locationListModifier = UIButton(frame: CGRect(origin: CGPoint(), size: locationsListModifierSize))
             locationListModifier.setImage(UIImage(named: imageName)?.withRenderingMode(.alwaysOriginal), for: .normal)
-            locationListModifier.tag = AnnotationTag.locationListModifier.rawValue
             view.rightCalloutAccessoryView = locationListModifier
             
             view.canShowCallout = true
@@ -87,18 +86,19 @@ extension ViewController: MKMapViewDelegate {
     
     func addLocation() {
         if let selectedPin = selectedPin {
-            let pin = PinnedLocation(title: selectedPin.title!, subtitle: selectedPin.subtitle!, coordinate: selectedPin.coordinate)
-            removeLocation() // TODO - we should remove this from list of searched locations and the map
-            locations.append(pin)
-            self.map.addAnnotation(pin)
+            self.map.removeAnnotation(selectedPin)
+            searchedPins = self.searchedPins.filter() { $0.placemark != selectedPin.placemark }
+            
+            let pinToSave = PinnedLocation(title: selectedPin.title!, subtitle: selectedPin.subtitle!, coordinate: selectedPin.coordinate)
+            locations.append(pinToSave)
+            self.map.addAnnotation(pinToSave)
         }
     }
     
     func removeLocation() {
         if let selectedPin = selectedPin {
             self.map.removeAnnotation(selectedPin)
-            locations = locations.filter() { $0.title != selectedPin.title }
-            // FIXME - PinnedLocations should be comparable
+            locations = locations.filter() { $0.placemark != selectedPin.placemark }
         }
     }
 
