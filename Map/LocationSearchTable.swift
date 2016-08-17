@@ -67,11 +67,7 @@ extension LocationSearchTable {
             if error != nil { print("error when tapping \(selectedItem.title): \(error?.description)") }
             if selectedItem.subtitle == "" { // if this is a suggestion (not an address)
                 guard let items = response?.mapItems else { return }
-                for item in items {
-                    self.handleMapSearchDelegate?.dropPin(for: item.placemark, saveToLocations: false)
-                    // TODO - Also zoom in appropriatly for these pins and show the add all button
-                    // call dropPins([]) and once we drop all the pins, zoom out and unhide the button
-                }
+                self.handleMapSearchDelegate?.dropPins(for: items.map { return $0.placemark } ) // convert the MKMapItems to MKPlacemarks
             } else { // this is an address
                 if let placemark = response?.mapItems[0].placemark {
                     self.handleMapSearchDelegate?.dropPin(for: placemark, saveToLocations: true)

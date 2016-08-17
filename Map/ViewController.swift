@@ -129,6 +129,7 @@ class ViewController: UIViewController  {
 // MARK: - Handle what happens when a search result is tapped
 protocol HandleMapSearch {
     func dropPin(for placemark:MKPlacemark, saveToLocations save: Bool)
+    func dropPins(for placemarks:[MKPlacemark])
 }
 
 extension ViewController: HandleMapSearch {
@@ -149,6 +150,14 @@ extension ViewController: HandleMapSearch {
         annotation.subtitle = AddressParser.parse(placemark: placemark)
         map.addAnnotation(annotation)
     
+    }
+    
+    func dropPins(for placemarks: [MKPlacemark]) {
+        for placemark in placemarks {
+            self.dropPin(for: placemark, saveToLocations: false)
+        }
+        fitMapRegionForSearchedPins()
+        savePinsHoverBar.isHidden = false
     }
     
     func fitMapRegionForSearchedPins() {
