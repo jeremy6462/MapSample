@@ -76,5 +76,9 @@ extension LocationSearchTable {
         }
         dismiss(animated: true, completion: nil)
     }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.handleMapSearchDelegate?.didScroll()
+    }
 
 }

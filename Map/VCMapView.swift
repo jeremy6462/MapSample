@@ -22,7 +22,6 @@ extension ViewController: MKMapViewDelegate {
             var view: MKPinAnnotationView
             view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             view.animatesDrop = true
-            view.isDraggable = true
             view.pinTintColor = annotation.pinColor
             
             // directions button
@@ -35,6 +34,7 @@ extension ViewController: MKMapViewDelegate {
             var imageName: String
             if annotation is PinnedLocation {
                 imageName = "removeLocation"
+                view.isDraggable = true
             } else { // it's a searched pin
                 imageName = "addLocation"
             }

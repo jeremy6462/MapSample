@@ -128,9 +128,11 @@ class ViewController: UIViewController  {
 protocol HandleMapSearch {
     func dropPin(for placemark:MKPlacemark, saveToLocations save: Bool)
     func dropPins(for placemarks:[MKPlacemark])
+    func didScroll()
 }
 
 extension ViewController: HandleMapSearch {
+    
     func dropPin(for placemark:MKPlacemark, saveToLocations save: Bool = true) {
         
         // if the pin is not present, add it
@@ -159,8 +161,8 @@ extension ViewController: HandleMapSearch {
     }
     
     func fitMapRegionForSearchedPins() {
-        var upper = searchedPins[0].coordinate
-        var lower = searchedPins[0].coordinate
+        var upper = CLLocationCoordinate2D(latitude: -90.0, longitude: -90.0)
+        var lower = CLLocationCoordinate2D(latitude: 90.0, longitude: 90.0)
         for pin in searchedPins {
             if pin.coordinate.latitude > upper.latitude { upper.latitude = pin.coordinate.latitude }
             if pin.coordinate.latitude < lower.latitude { lower.latitude = pin.coordinate.latitude }
@@ -179,6 +181,10 @@ extension ViewController: HandleMapSearch {
         map.removeAnnotations(searchedPins)
         searchedPins = []
         savePinsHoverBar.isHidden = true
+    }
+    
+    func didScroll() {
+        self.resultSearchController?.searchBar.resignFirstResponder()
     }
 }
 
@@ -206,7 +212,10 @@ extension ViewController: UISearchBarDelegate {
         self.savePinsHoverBar.isHidden = false
         locationSearchTable.dismiss(animated: true)
     }
-
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        clearMapOfSearches()
+    }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         clearMapOfSearches()
