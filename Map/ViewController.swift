@@ -71,8 +71,6 @@ class ViewController: UIViewController  {
         
         // save pins hover bar
         let savePinsButton = UIButton(type: .contactAdd)
-        savePinsButton.tintColor = UIColor.green()
-        savePinsButton.frame = savePinsHoverBar.frame
         savePinsButton.addTarget(self, action: #selector(savePins), for: .touchUpInside)
         let savePinsBarButton = UIBarButtonItem(customView: savePinsButton)
         savePinsHoverBar.items = [savePinsBarButton]

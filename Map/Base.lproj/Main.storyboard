@@ -29,15 +29,15 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TKE-0C-CMf" secondAttribute="bottom" constant="543" id="A7o-E6-DuD"/>
+                            <constraint firstItem="TKE-0C-CMf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="5" id="9z9-b0-ZSB"/>
                             <constraint firstItem="ejz-oA-Jnr" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="N0N-SC-hk6"/>
+                            <constraint firstItem="TKE-0C-CMf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="21" id="PRq-HR-2n6"/>
                             <constraint firstItem="2gB-1y-Did" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="T35-KR-3cg"/>
                             <constraint firstItem="2gB-1y-Did" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="TZi-6h-N17"/>
                             <constraint firstAttribute="trailing" secondItem="2gB-1y-Did" secondAttribute="trailing" id="bek-HV-ZJd"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="TKE-0C-CMf" secondAttribute="bottom" constant="538" id="eGD-F8-gMP"/>
                             <constraint firstAttribute="bottom" secondItem="ejz-oA-Jnr" secondAttribute="bottom" constant="20" symbolic="YES" id="fP7-aj-u8O"/>
-                            <constraint firstItem="TKE-0C-CMf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="16" id="i5h-x0-3Pu"/>
                             <constraint firstItem="2gB-1y-Did" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="tcR-kP-fmv"/>
-                            <constraint firstItem="TKE-0C-CMf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="zpI-4A-ani"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="sZq-IA-YMm"/>
@@ -73,18 +73,18 @@
                                 <frame key="frameInset" minY="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eue-TW-KGV" id="axO-VP-fxk">
-                                    <frame key="frameInset" width="375" height="43.5"/>
+                                    <frame key="frameInset" width="375" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1i8-3c-sFc">
-                                            <frame key="frameInset" minX="15" minY="5" width="33.5" height="20.5"/>
+                                            <frame key="frameInset" minX="15" minY="4" width="34" height="21"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9Mg-ln-Jjw">
-                                            <frame key="frameInset" minX="15" minY="25.5" width="44" height="14.5"/>
+                                            <frame key="frameInset" minX="15" minY="25" width="44" height="15"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
