@@ -27,7 +27,10 @@ extension ViewController: MKMapViewDelegate {
             // directions button
             let directionsSize = CGSize(width: 50, height: 50)
             let directions = UIButton(frame: CGRect(origin: CGPoint(), size: directionsSize))
-            directions.backgroundColor = UIColor.blue() // FIXME - directions icon
+            let car = UIImage(named: "car")
+            directions.imageEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+            directions.setImage(car, for: .normal)
+            directions.backgroundColor = UIColor.blue()
             view.leftCalloutAccessoryView = directions
             
             // add/remove from location list
