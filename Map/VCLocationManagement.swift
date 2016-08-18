@@ -11,33 +11,49 @@ import MapKit
 
 extension ViewController: CLLocationManagerDelegate {
     
-    
     func checkLocationAuthorizationStatus() {
-        switch CLLocationManager.authorizationStatus() {
+        handleAuthorization(status: CLLocationManager.authorizationStatus())
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        handleAuthorization(status: status)
+    }
+    
+    func handleAuthorization(status: CLAuthorizationStatus) {
+        switch status {
         case .authorizedWhenInUse:
             locationManager.requestLocation()
+            allowLocationTracking()
         case .notDetermined:
             locationManager.requestWhenInUseAuthorization()
         default:
-            centerMapOnLocation(location: CLLocation(latitude: 21.283921, longitude: -157.831661))
+            doesntAllowLocationTracking()
         }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        centerMapOnLocation(location: locations.last!)
+    }
+    
+    // MARK - Utilities
     
     func centerMapOnLocation(location: CLLocation) {
         let coordinateRegion = MKCoordinateRegionMakeWithDistance(location.coordinate, regionRadius * 2.0, regionRadius * 2.0)
         map.setRegion(coordinateRegion, animated: true)
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .authorizedWhenInUse:
-            locationManager.requestLocation()
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        default:
-            centerMapOnLocation(location: CLLocation(latitude: 21.283921, longitude: -157.831661))
-        }
+    func allowLocationTracking() {
+        self.currentLocationHoverBar.isHidden = false
+        map.showsUserLocation = true
+        map.setCenter(map.userLocation.coordinate, animated: true)
     }
+    
+    func doesntAllowLocationTracking() {
+        self.currentLocationHoverBar.isHidden = true
+        map.showsUserLocation = false
+    }
+    
+    // MARK - Error Handling
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: NSError) {
         if CLLocationManager.authorizationStatus() == .denied {
@@ -46,8 +62,5 @@ extension ViewController: CLLocationManagerDelegate {
             print("Location manager did fail with error: \(error.localizedFailureReason)")
         }
     }
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        currentLocation = locations.last
-        centerMapOnLocation(location: currentLocation!)
-    }
+
 }

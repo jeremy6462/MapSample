@@ -14,7 +14,6 @@ class ViewController: UIViewController  {
     
     let regionRadius: CLLocationDistance = 1000
     var locationManager = CLLocationManager()
-    var currentLocation: CLLocation?
     
     var resultSearchController: UISearchController? = nil
     var selectedPin: Pinnable? = nil
@@ -42,7 +41,6 @@ class ViewController: UIViewController  {
         locationManager.delegate = self
         
         // map user location set up
-        map.showsUserLocation = true
         checkLocationAuthorizationStatus()
         
         // search bar setup
@@ -62,9 +60,7 @@ class ViewController: UIViewController  {
         resultSearchController?.hidesNavigationBarDuringPresentation = false
         resultSearchController?.dimsBackgroundDuringPresentation = false // make the map view still usable after the search button is pressed!
         definesPresentationContext = true
-        
-        // map buttons
-        
+                
         // current location hover bar
         let mapBarButton = MKUserTrackingBarButtonItem(mapView: map)
         self.currentLocationHoverBar.items = [mapBarButton]
